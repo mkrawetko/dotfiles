@@ -219,6 +219,9 @@ export LC_ALL=POSIX
 #    nvm use v0.10.12 &> /dev/null # silence nvm use; needed for rsync
 #fi
 
+# 2.8) python
+alias python='python3'
+
 ## ------------------------------
 ## -- 3) User-customized code  --
 ## ------------------------------
