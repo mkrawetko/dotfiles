@@ -57,6 +57,10 @@ fi
 # Configure PATH
 #  - These are line by line so that you can kill one without affecting the others.
 #  - Lowest priority first, highest priority last.
+case $unamestr in
+  'Darwin') export JAVA_HOME=$(/usr/libexec/java_home) ;;
+  *) ;;
+esac
 #export PATH=$PATH
 #export PATH=$HOME/bin:$PATH
 #export PATH=/usr/bin:$PATH

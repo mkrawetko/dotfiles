@@ -38,6 +38,7 @@
 #      --norc option. The --rcfile file option will force Bash to read and
 #      execute commands from file instead of ~/.bashrc.
 
+unamestr=`uname`
 
 
 # -----------------------------------
@@ -162,7 +163,7 @@ shopt -s histappend
 
 # Make prompt informative
 # See:  http://www.ukuug.org/events/linux2003/papers/bash_tips/
-PS1="\[\033[0;34m\][\u@\h:\w]$\[\033[0m\]"
+PS1="\[\033[1;34m\][\$(date +%H:%M:%S)]$\[\033[0m\] "
 
 ## -----------------------
 ## -- 2) Set up aliases --
@@ -175,7 +176,11 @@ alias cp="cp -i"
 set -o noclobber
 
 # 2.2) Listing, directories, and motion
-alias ll="ls -alrtFh --color"
+case $unamestr in
+  'Linux') alias ll="ls -alrtFh --color"  ;;
+  'Darwin') alias ll="ls -alrtFh -G" ;;
+esac
+
 alias la="ls -A"
 alias l="ls -CF"
 alias dir='ls --color=auto --format=vertical'
@@ -185,7 +190,10 @@ alias ..='cd ..'
 alias ...='cd ..;cd ..'
 alias md='mkdir'
 alias cl='clear'
-alias du='du -ch --max-depth=1'
+case $unamestr in
+  'Linux') alias dut='du -ch --max-depth=1'  ;;
+  'Darwin') alias dut='du -ch -d=1' ;;
+esac
 alias treeacl='tree -A -C -L 2'
 
 # 2.3) Text and editor commands
