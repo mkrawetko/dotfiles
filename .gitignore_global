@@ -1,4 +1,4 @@
-ompiled source #
+compiled source #
 ###################
 *.com
 *.class
@@ -114,6 +114,12 @@ build/
 ######################
 /log/
 target/
+
+#####################
+# Nodejs
+#####################
+node_modules
+npm-debug.log
 
 # for git
 #.gitignore
