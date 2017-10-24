@@ -7,7 +7,7 @@ cd $HOME
 
 ./dotfiles/setup-git.sh
 
-git clone https://github.com/mkrawetko/dotfiles.git
+#git clone https://github.com/mkrawetko/dotfiles.git
 ln -s dotfiles/.bash_profile .
 ln -s dotfiles/.bashrc .
 ln -s dotfiles/.bashrc_custom .
