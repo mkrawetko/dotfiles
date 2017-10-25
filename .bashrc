@@ -230,6 +230,9 @@ export LC_ALL=POSIX
 # 2.8) python
 alias python='python3'
 
+# 2.9) gradle
+alias gw='./gradlew'
+
 ## ------------------------------
 ## -- 3) User-customized code  --
 ## ------------------------------
