@@ -125,6 +125,4 @@ npm-debug.log
 #.gitignore
 
 # for project
-com/
-!src/*/*/com
 notForVCS/
