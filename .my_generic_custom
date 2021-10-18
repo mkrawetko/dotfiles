@@ -1,0 +1,16 @@
+## My own but still generic aliases etc..
+
+rmFRec() {
+  find . -type f -name "$1" -print0 | xargs -0 -I {} rm -v "{}"
+}
+#Find all files having .iml (*.iml) extension recursively and remove
+alias rmImlRec='rmFRec "*.iml"'
+#Find all files having .lastUpdated (*.lastUpdated) extension recursively and remove from ~/m2/repository
+alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated"'
+
+#Login to Google Cloud Registry (GCR) with the key
+lGCR() {
+  local keyPath
+  keyPath="${1:-$HOME/GCR_SERVICE_ACCOUNT_KEY.json}"
+  docker login -u _json_key --password-stdin eu.gcr.io <"$keyPath"
+}

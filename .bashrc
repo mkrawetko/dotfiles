@@ -7,7 +7,7 @@
 #        first connection.
 #    2) .bash_profile is the *login* config for bash, launched upon first connection.
 #    3) .bash_profile imports .bashrc, but not vice versa.
-#    4) .bashrc imports .bashrc_custom, which can be used to override
+#    4) .bashrc imports .my_generic_custom and .my_host_custom, which can be used to override
 #        variables specified here.
 #           
 # When using GNU screen:
@@ -238,4 +238,7 @@ alias gw='./gradlew'
 ## ------------------------------
 
 ## Define any user-specific variables you want here.
-source ~/.bashrc_custom
+# shellcheck source=.my_generic_custom
+source ~/.my_generic_custom
+# shellcheck source=.host_custom
+source ~/.my_host_custom
