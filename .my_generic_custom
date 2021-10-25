@@ -6,7 +6,7 @@ rmFRec() {
 #Find all files having .iml (*.iml) extension recursively and remove
 alias rmImlRec='rmFRec "*.iml"'
 #Find all files having .lastUpdated (*.lastUpdated) extension recursively and remove from ~/m2/repository
-alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated"'
+alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated" && cd -'
 
 #Login to Google Cloud Registry (GCR) with the key
 lGCR() {
