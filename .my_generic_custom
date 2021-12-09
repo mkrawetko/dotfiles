@@ -11,6 +11,6 @@ alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated" && cd -'
 #Login to Google Cloud Registry (GCR) with the key
 lGCR() {
   local keyPath
-  keyPath="${1:-$HOME/GCR_SERVICE_ACCOUNT_KEY.json}"
+  keyPath="${1:-$HOME/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json}"
   docker login -u _json_key --password-stdin eu.gcr.io <"$keyPath"
 }
