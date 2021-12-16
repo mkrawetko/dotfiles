@@ -8,6 +8,8 @@ alias rmImlRec='rmFRec "*.iml"'
 #Find all files having .lastUpdated (*.lastUpdated) extension recursively and remove from ~/m2/repository
 alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated" && cd -'
 
+alias gwDepTreeByBuildKts='find . -type f -name build.gradle.kts | grep -v buildSrc | xargs -I {} ./gradlew -b "{}" dependencies | tee depTree-"$(date '+%Y%m%d%H%M%S')".txt'
+
 #Login to Google Cloud Registry (GCR) with the key
 export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json
 lGCR() {
