@@ -1,5 +1,5 @@
 *.class
-
+.my_host_custom
 # Package Files #
 *.jar
 *.war

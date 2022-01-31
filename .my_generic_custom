@@ -1,5 +1,6 @@
 ## My own but still generic aliases etc..
 
+# --- rm ---
 rmFRec() {
   find . -type f -name "$1" -print0 | xargs -0 -I {} rm -v "{}"
 }
@@ -10,8 +11,44 @@ alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated" && cd -'
 
 alias gwDepTreeByBuildKts='find . -type f -name build.gradle.kts | grep -v buildSrc | xargs -I {} ./gradlew -b "{}" dependencies | tee depTree-"$(date '+%Y%m%d%H%M%S')".txt'
 
-#Login to Google Cloud Registry (GCR) with the key
+# --- GREP ---
+GREP_EXCLUDE_DIR_USELESS=(-I --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox} --exclude=\*.{class,dbf})
+GREP_EXCLUDE_DIR_TEST=(--exclude-dir="*test*")
+GREP_INCLUDE_JAVA=(--include=\*.{"java","kt"})
+GREP_INCLUDE_SQL=(--include="*.sql")
+GREP_INCLUDE_XML=(--include="*.xml")
+ALL_RESOURCES='*'
+MAIN_RESOURCES='*src/main/*'
+TEST_RESOURCES='*src/test/*'
+grepAll() {
+  PATH_PATTERN=$1
+  set -o xtrace
+  find . -path "$PATH_PATTERN" -type d -print0 | xargs -0 grep --color=auto -E --recursive "${GREP_EXCLUDE_DIR_USELESS[@]}" "${@:2}"
+  set +o xtrace
+}
+grepSql() {
+  grepAll "$ALL_RESOURCES" "${GREP_INCLUDE_SQL[@]}" "$@"
+}
+grepXml() {
+  grepAll "$ALL_RESOURCES" "${GREP_INCLUDE_XML[@]}" "$@"
+}
+grepProd() {
+  grepAll "$MAIN_RESOURCES" "${GREP_EXCLUDE_DIR_TEST[@]}" "$@"
+}
+grepTest() {
+  grepAll "$TEST_RESOURCES" "$@"
+}
+grepProdJava() {
+  grepProd "${GREP_INCLUDE_JAVA[@]}" "$@"
+}
+grepTestJava() {
+  grepTest "${GREP_INCLUDE_JAVA[@]}" "$@"
+}
+
+alias grepR='grepAll "*" '
+
+# --- Login to Google Cloud Registry (GCR) with the key ---
 export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json
 lGCR() {
-  docker login -u _json_key --password-stdin eu.gcr.io<"$GCR_SERVICE_ACCOUNT_KEY_PATH"
+  docker login -u _json_key --password-stdin eu.gcr.io <"$GCR_SERVICE_ACCOUNT_KEY_PATH"
 }
