@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ## My own but still generic aliases etc..
 
 # --- rm ---
@@ -11,7 +12,7 @@ alias rmM2LastURec='cd ~/.m2/repository && rmFRec "*.lastUpdated" && cd -'
 
 alias gwDepTreeByBuildKts='find . -type f -name build.gradle.kts | grep -v buildSrc | xargs -I {} ./gradlew -b "{}" dependencies | tee depTree-"$(date '+%Y%m%d%H%M%S')".txt'
 
-# --- GREP ---
+### --- GREP ---
 GREP_EXCLUDE_DIR_USELESS=(-I --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox} --exclude=\*.{class,dbf})
 GREP_EXCLUDE_DIR_TEST=(--exclude-dir="*test*")
 GREP_INCLUDE_JAVA=(--include=\*.{"java","kt"})
@@ -47,8 +48,54 @@ grepTestJava() {
 
 alias grepR='grepAll "*" '
 
-# --- Login to Google Cloud Registry (GCR) with the key ---
+### --- Login to Google Cloud Registry (GCR) with the key ---
 export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json
 lGCR() {
   docker login -u _json_key --password-stdin eu.gcr.io <"$GCR_SERVICE_ACCOUNT_KEY_PATH"
 }
+
+### --- JAVA ---
+java17Path() {
+  case "$OSTYPE" in
+  darwin*) /usr/libexec/java_home -v 17 ;;
+  linux*) echo "setting JAVA_HOME for linux is not implemented" ;;
+  *) echo "unknown: $OSTYPE" ;;
+  esac
+}
+
+java8Path() {
+  case "$OSTYPE" in
+  darwin*) /usr/libexec/java_home -v 1.8.0 ;;
+  linux*) echo "setting JAVA_HOME for linux is not implemented" ;;
+  *) echo "unknown: $OSTYPE" ;;
+  esac
+}
+java17Export() {
+  JAVAPATH="$(java17Path)"
+  export JAVA_HOME=$JAVAPATH
+}
+java8Export() {
+  JAVAPATH="$(java8Path)"
+  export JAVA_HOME=$JAVAPATH
+}
+
+java17Export
+
+
+importCertificate(){
+  if [ $# -ne 2 ]
+    then
+      echo "requires 2 arguments: alias /certificate/path"
+    else
+      ALIAS=$1
+      CERTIFICATE_PATH=$2
+      set -o xtrace
+      sudo "$JAVA_HOME"/bin/keytool -importcert -alias "$ALIAS" -file "$CERTIFICATE_PATH" -keystore "$JAVA_HOME"/lib/security/cacerts -storepass changeit -noprompt
+      set +o xtrace
+  fi
+}
+
+
+### --- Maven ---
+export M2_HOME="${HOME}/workspace/tools/maven"
+export PATH="/usr/local/bin:$PATH:${M2_HOME}/bin"
