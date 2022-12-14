@@ -48,6 +48,15 @@ grepTestJava() {
 
 alias grepR='grepAll "*" '
 
+
+### --Properties
+exportConfIntoEnv(){
+  ## usage example: exportConfIntoEnv frequentFlyer/conf.yaml
+  set -o xtrace
+  export $(grep -v '^#' "$HOME"/.config/"$1" | sed 's/: /=/g' | xargs)
+  set +o xtrace
+}
+
 ### --- Login to Google Cloud Registry (GCR) with the key ---
 export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json
 lGCR() {
