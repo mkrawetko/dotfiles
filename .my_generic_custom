@@ -53,7 +53,7 @@ alias grepR='grepAll "*" '
 exportConfIntoEnv(){
   ## usage example: exportConfIntoEnv frequentFlyer/conf.yaml
   set -o xtrace
-  export $(grep -v '^#' "$HOME"/.config/"$1" | sed 's/: /=/g' | xargs)
+  export $(grep -v '^#' "$HOME/.config/$1" | sed 's/: /=/g' | xargs)
   set +o xtrace
 }
 
@@ -104,6 +104,11 @@ importCertificate(){
   fi
 }
 
+### PACT
+#Please note: we are tracking events anonymously to gather important usage statistics like JVM version
+#and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
+#variable to 'true'.
+export pact_do_not_track=true
 
 ### --- Maven ---
 export M2_HOME="${HOME}/workspace/tools/maven"
