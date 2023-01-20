@@ -58,7 +58,7 @@ exportConfIntoEnv(){
 }
 
 ### --- Login to Google Cloud Registry (GCR) with the key ---
-export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.config/gcloud/GCR_SERVICE_ACCOUNT_KEY.json
+export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.docker/GCR_SERVICE_ACCOUNT_KEY.json
 lGCR() {
   docker login -u _json_key --password-stdin eu.gcr.io <"$GCR_SERVICE_ACCOUNT_KEY_PATH"
 }
