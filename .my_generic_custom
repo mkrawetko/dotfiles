@@ -90,7 +90,8 @@ java8Export() {
 
 java17Export
 
-
+#java 8u181 has certificates in jre/lib/security/cacerts
+# updating certs in openjdk tum 17.0.5 doesn't seem to change anything using Corretto as alternative
 importCertificate(){
   if [ $# -ne 2 ]
     then
@@ -109,7 +110,3 @@ importCertificate(){
 #and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
 #variable to 'true'.
 export pact_do_not_track=true
-
-### --- Maven ---
-export M2_HOME="${HOME}/workspace/tools/maven"
-export PATH="/usr/local/bin:$PATH:${M2_HOME}/bin"

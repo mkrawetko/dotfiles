@@ -2,9 +2,15 @@ dotfiles
 ========
 
 Install [oh my zsh](https://ohmyz.sh/)
+Install [sdkman](https://sdkman.io/install)
 
 - add [.my_host_custom](.my_generic_custom) and [.my_host_custom](.my_host_custom) to User configuration section in
-  .zshrc
+  .zshrc 
+``` 
+# User configuration
+source ~/.my_generic_custom
+source ~/.my_host_custom
+ ```
 
 ### GIT
 
