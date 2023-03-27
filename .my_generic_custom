@@ -14,6 +14,7 @@ alias gwDepTreeByBuildKts='find . -type f -name build.gradle.kts | grep -v build
 
 ### --- GREP ---
 GREP_EXCLUDE_DIR_USELESS=(-I --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox} --exclude=\*.{class,dbf})
+GREP_EXCLUDE_FILE_USELESS=(-I --exclude=\*.{class,dbf})
 GREP_EXCLUDE_DIR_TEST=(--exclude-dir="*test*")
 GREP_INCLUDE_JAVA=(--include=\*.{"java","kt"})
 GREP_INCLUDE_SQL=(--include="*.sql")
@@ -21,10 +22,14 @@ GREP_INCLUDE_XML=(--include="*.xml")
 ALL_RESOURCES='*'
 MAIN_RESOURCES='*src/main/*'
 TEST_RESOURCES='*src/test/*'
+FIND_DIR_TEST=( -path '*test*' )
+FIND_DIR_USELESS=( -path '*.bzr*' -o -path '*CVS*' -o -path '*.git*' -o -path '*.hg*' -o -path '*.svn*' -o -path '*.idea*' -o -path '*.tox*' )
 grepAll() {
   PATH_PATTERN=$1
   set -o xtrace
-  find . -path "$PATH_PATTERN" -type d -print0 | xargs -0 grep --color=auto -E --recursive "${GREP_EXCLUDE_DIR_USELESS[@]}" "${@:2}"
+  find {} -path "$PATH_PATTERN" -not \( "${FIND_DIR_USELESS[@]}" \) "${@:2}" -type f -print0 | xargs -0 -P 8 grep --color=auto -E "${GREP_EXCLUDE_FILE_USELESS[@]}"
+#  find . -path "*" -not \( "${FIND_DIR_USELESS[@]}" \) "${@:2}" -type d -maxdepth 1 -print0 | xargs -0 -I{} find {} -path "$PATH_PATTERN" -not \( "${FIND_DIR_USELESS[@]}" \) "${@:2}" -type f -print
+#  find . -path "$PATH_PATTERN" -type d -print0 | xargs -0 grep --color=auto -E --recursive "${GREP_EXCLUDE_DIR_USELESS[@]}" "${@:2}"
   set +o xtrace
 }
 grepSql() {
@@ -34,7 +39,8 @@ grepXml() {
   grepAll "$ALL_RESOURCES" "${GREP_INCLUDE_XML[@]}" "$@"
 }
 grepProd() {
-  grepAll "$MAIN_RESOURCES" "${GREP_EXCLUDE_DIR_TEST[@]}" "$@"
+#  grepAll "$MAIN_RESOURCES" "${GREP_EXCLUDE_DIR_TEST[@]}" "$@"
+  grepAll "$MAIN_RESOURCES" -not \( "${FIND_DIR_TEST[@]}" \) "$@"
 }
 grepTest() {
   grepAll "$TEST_RESOURCES" "$@"
