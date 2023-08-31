@@ -21,7 +21,7 @@ ALL_RESOURCES='*'
 MAIN_RESOURCES='*src/main/*'
 TEST_RESOURCES='*src/test/*'
 FIND_DIR_TEST=( -path '*test*' )
-FIND_DIR_USELESS=( -path '*.bzr*' -o -path '*CVS*' -o -path '*.git*' -o -path '*.hg*' -o -path '*.svn*' -o -path '*.idea*' -o -path '*.tox*' )
+FIND_DIR_USELESS=( -path '*.bzr*' -o -path '*CVS*' -o -path '*.git/*' -o -path '*.hg*' -o -path '*.svn*' -o -path '*.idea*' -o -path '*.tox*' )
 grepAll() {
   PATH_PATTERN=$1
   set -o xtrace
