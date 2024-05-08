@@ -23,3 +23,4 @@ git config --system --remove-section credential
 git config --global credential.helper "cache --timeout=0"
 
 git config --global core.excludesfile ~/dotfiles/.gitignore_global
+git config --global status.submodulesummary 1

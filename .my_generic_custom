@@ -111,3 +111,6 @@ importCertificate(){
 #and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
 #variable to 'true'.
 export pact_do_not_track=true
+
+### SET PATH
+export PATH="$HOME/.local/bin:$PATH"
