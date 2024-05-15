@@ -65,6 +65,14 @@ lGCR() {
 }
 
 ### --- JAVA ---
+java21Path() {
+  case "$OSTYPE" in
+  darwin*) /usr/libexec/java_home -v 21 ;;
+  linux*) update-alternatives --list java | grep java-21 | head -c -10 ;;
+  *) echo "unknown: $OSTYPE" ;;
+  esac
+}
+
 java17Path() {
   case "$OSTYPE" in
   darwin*) /usr/libexec/java_home -v 17 ;;
@@ -80,6 +88,11 @@ java8Path() {
   *) echo "unknown: $OSTYPE" ;;
   esac
 }
+java21Export() {
+  JAVAPATH="$(java21Path)"
+  export JAVA_HOME=$JAVAPATH
+}
+
 java17Export() {
   JAVAPATH="$(java17Path)"
   export JAVA_HOME=$JAVAPATH
@@ -89,7 +102,7 @@ java8Export() {
   export JAVA_HOME=$JAVAPATH
 }
 
-java17Export
+java21Export
 
 #java 8u181 has certificates in jre/lib/security/cacerts
 # updating certs in openjdk tum 17.0.5 doesn't seem to change anything using Corretto as alternative
