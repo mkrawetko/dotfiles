@@ -60,6 +60,8 @@ exportConfIntoEnv(){
 
 ### --- Login to Google Cloud Registry (GCR) with the key ---
 export GCR_SERVICE_ACCOUNT_KEY_PATH="$HOME"/.docker/GCR_SERVICE_ACCOUNT_KEY.json
+gcrServiceAccountKey=${$(cat "$GCR_SERVICE_ACCOUNT_KEY_PATH")//$'\n'}
+export GCR_SERVICE_ACCOUNT_KEY=$gcrServiceAccountKey
 lGCR() {
   docker login -u _json_key --password-stdin eu.gcr.io <"$GCR_SERVICE_ACCOUNT_KEY_PATH"
 }
@@ -106,7 +108,7 @@ java21Export
 
 #java 8u181 has certificates in jre/lib/security/cacerts
 # updating certs in openjdk tum 17.0.5 doesn't seem to change anything using Corretto as alternative
-importCertificate(){
+javaImportCertificate(){
   if [ $# -ne 2 ]
     then
       echo "requires 2 arguments: alias /certificate/path"
@@ -117,6 +119,11 @@ importCertificate(){
       sudo "$JAVA_HOME"/bin/keytool -importcert -alias "$ALIAS" -file "$CERTIFICATE_PATH" -keystore "$JAVA_HOME"/lib/security/cacerts -storepass changeit -noprompt
       set +o xtrace
   fi
+}
+
+##Docker
+dockerRmiForceGrepName(){
+  docker rmi --force $(docker images | grep $1 | awk '{print \$3}')
 }
 
 ### PACT
