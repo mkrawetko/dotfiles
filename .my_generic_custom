@@ -126,6 +126,14 @@ dockerRmiForceGrepName(){
   docker rmi --force $(docker images | grep $1 | awk '{print \$3}')
 }
 
+
+## zip
+zipDir(){
+  dirToZip=$1
+  timestamp=$(date "+%Y%m%d_%H%M%S")
+  zip -r "${dirToZip}_${timestamp}".zip "$dirToZip" -x "*.DS_Store"
+}
+
 ### PACT
 #Please note: we are tracking events anonymously to gather important usage statistics like JVM version
 #and operating system. To disable tracking, set the 'pact_do_not_track' system property or environment
