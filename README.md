@@ -4,7 +4,8 @@ dotfiles
 Install [oh my zsh](https://ohmyz.sh/)
 Install [sdkman](https://sdkman.io/install)
 
-- add [.my_host_custom](.my_generic_custom) and [.my_host_custom](.my_host_custom) to User configuration section in
+ - execute [setupDotfiles](setup-dotfiles.sh), [setup-git](setup-git.sh)
+ - add [.my_host_custom](.my_generic_custom) and [.my_host_custom](.my_host_custom) to User configuration section in
   .zshrc 
 ``` 
 # User configuration
