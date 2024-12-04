@@ -123,9 +123,33 @@ javaImportCertificate(){
 
 ##Docker
 dockerRmiForceGrepName(){
-  docker rmi --force $(docker images | grep $1 | awk '{print \$3}')
+  docker rmi --force $(docker images | grep "$1" | awk '{print $3}')
 }
-
+dockerRmiDangling(){
+  docker rmi $(docker images -qf dangling=true 2>/dev/null) || true
+}
+dockerVolumeRmDangling(){
+  $(docker volume ls -qf dangling=true 2>/dev/null) || true
+}
+dockerStopWithName(){
+  docker stop $(docker ps -qf name="$1") || true
+}
+dockerRmWithName(){
+  docker rm $(docker ps -aqf name="$1") || true
+}
+dockerCleanContainers(){
+  set -o xtrace
+  dockerStopWithName "$1"
+  dockerRmWithName "$1"
+  set +o xtrace
+}
+dockerCleanAll(){
+  set -o xtrace
+  dockerRmiDangling
+  dockerRmiForceGrepName "$1"
+  dockerVolumeRmDangling
+  set +o xtrace
+}
 
 ## zip
 zipDir(){
