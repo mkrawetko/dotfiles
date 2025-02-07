@@ -151,6 +151,22 @@ dockerCleanAll(){
   set +o xtrace
 }
 
+# Function to create a Docker network if it doesn't exist
+docker_create_network() {
+  # Use the provided network name or default to "default_network"
+  NETWORK_NAME="${1:-my-network}"
+
+  # Check if the network exists
+  if ! docker network ls | grep -q "$NETWORK_NAME"; then
+    echo "Network $NETWORK_NAME does not exist. Creating it..."
+    docker network create "$NETWORK_NAME"
+  else
+    echo "Network $NETWORK_NAME already exists."
+  fi
+}
+
+
+
 ## zip
 zipDir(){
   dirToZip=$1
@@ -166,3 +182,61 @@ export pact_do_not_track=true
 
 ### SET PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+
+### Database
+function dbStartOracle19Database {
+     local container_name="oracle-19c"
+
+     function startDatabase {
+        local app_name=$1 app_version=$2 gitlab_token=${GITLAB_TOKEN}
+        local image="${DOCKER_REGISTRY}/${app_name}:${app_version}"
+
+        function runOracle {
+          echo 'Starting new local Docker database for VDC apps'
+          docker_create_network
+          docker run --name ${container_name} -d -p 1525:1525 --shm-size=2g --restart=unless-stopped --net=my-network --net-alias=${container_name} -e GITLAB_TOKEN=${gitlab_token} ${image}
+        }
+
+        output=$(docker inspect --format='{{ .State.Status }}' ${container_name} 2> /dev/null)
+
+        if [[ $? -eq 1 ]]; then
+            runOracle
+        else
+            running_image=$(docker inspect --format='{{ .Config.Image }}' ${container_name} 2> /dev/null)
+
+            if [[ $output == 'running' ]]; then
+                if [[ ${running_image} != ${image} ]]; then
+                   echo "Removing outdated ${running_image}"
+                   docker kill ${container_name} > /dev/null
+                   docker rm ${container_name} > /dev/null
+                   runOracle
+                fi
+            else
+                if [[ ${running_image} != ${image} ]]; then
+                    echo "Removing outdated ${running_image}"
+                    docker rm ${container_name} > /dev/null
+                    runOracle
+                else
+                    echo 'Starting local Docker database for VDC apps'
+                    docker start ${container_name} > /dev/null
+                fi
+            fi
+        fi
+        unfunction runOracle
+
+        echo "Docker database for VDC apps running on:"
+        echo "jdbc:oracle:thin:@//localhost:1525/db1"
+    }
+
+    case `uname -p` in
+      i386)
+        startDatabase oracle-19c 1-48
+      ;;
+      arm)
+        startDatabase sonique-oracle-19c latest
+      ;;
+    esac
+
+    unfunction startDatabase
+}
