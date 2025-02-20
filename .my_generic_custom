@@ -194,8 +194,8 @@ function dbStartOracle19Database {
 
         function runOracle {
           echo 'Starting new local Docker database for VDC apps'
-          docker_create_network
-          docker run --name ${container_name} -d -p 1525:1525 --shm-size=2g --restart=unless-stopped --net=my-network --net-alias=${container_name} -e GITLAB_TOKEN=${gitlab_token} ${image}
+          docker_create_network my-network
+          docker run --name ${container_name} -d -p 1525:1525 --shm-size=2g --restart=unless-stopped --net=my-network --net-alias=${container_name} -e GITLAB_TOKEN="${gitlab_token}" "${image}"
         }
 
         output=$(docker inspect --format='{{ .State.Status }}' ${container_name} 2> /dev/null)
@@ -206,14 +206,14 @@ function dbStartOracle19Database {
             running_image=$(docker inspect --format='{{ .Config.Image }}' ${container_name} 2> /dev/null)
 
             if [[ $output == 'running' ]]; then
-                if [[ ${running_image} != ${image} ]]; then
+                if [[ ${running_image} != "${image}" ]]; then
                    echo "Removing outdated ${running_image}"
                    docker kill ${container_name} > /dev/null
                    docker rm ${container_name} > /dev/null
                    runOracle
                 fi
             else
-                if [[ ${running_image} != ${image} ]]; then
+                if [[ ${running_image} != "${image}" ]]; then
                     echo "Removing outdated ${running_image}"
                     docker rm ${container_name} > /dev/null
                     runOracle
@@ -229,7 +229,7 @@ function dbStartOracle19Database {
         echo "jdbc:oracle:thin:@//localhost:1525/db1"
     }
 
-    case `uname -p` in
+    case $(uname -p) in
       i386)
         startDatabase oracle-19c 1-48
       ;;
