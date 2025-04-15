@@ -244,7 +244,7 @@ function dbStartOracle19Database {
 
     case $(uname -p) in
       i386)
-        startDatabase oracle-19c 1-48
+        startDatabase oracle-19c 1-62
       ;;
       arm)
         startDatabase sonique-oracle-19c latest
