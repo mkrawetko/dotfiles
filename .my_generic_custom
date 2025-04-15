@@ -106,8 +106,6 @@ java8Export() {
 
 java21Export
 
-#java 8u181 has certificates in jre/lib/security/cacerts
-# updating certs in openjdk tum 17.0.5 doesn't seem to change anything using Corretto as alternative
 javaImportCertificate(){
   if [ $# -ne 2 ]
     then
@@ -116,10 +114,25 @@ javaImportCertificate(){
       ALIAS=$1
       CERTIFICATE_PATH=$2
       set -o xtrace
-      sudo "$JAVA_HOME"/bin/keytool -importcert -alias "$ALIAS" -file "$CERTIFICATE_PATH" -keystore "$JAVA_HOME"/lib/security/cacerts -storepass changeit -noprompt
+      sudo "$JAVA_HOME"/bin/keytool -import -trustcacerts -alias "$ALIAS" -file "$CERTIFICATE_PATH" -cacerts -storepass changeit -noprompt
       set +o xtrace
   fi
 }
+
+#java 8 has certificates in jre/lib/security/cacerts
+javaImportCertificateJava8(){
+  if [ $# -ne 2 ]
+    then
+      echo "requires 2 arguments: alias /certificate/path"
+    else
+      ALIAS=$1
+      CERTIFICATE_PATH=$2
+      set -o xtrace
+      sudo "$JAVA_HOME"/bin/keytool -import -trustcacerts -alias "$ALIAS" -file "$CERTIFICATE_PATH" -keystore "$JAVA_HOME"/jre/lib/security/cacerts -storepass changeit -noprompt
+      set +o xtrace
+  fi
+}
+
 
 ##Docker
 dockerRmiForceGrepName(){
